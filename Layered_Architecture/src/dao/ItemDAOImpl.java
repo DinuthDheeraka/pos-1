@@ -4,6 +4,7 @@ import javafx.scene.control.Alert;
 import util.CrudUtil;
 import view.tdm.ItemTM;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,11 +33,21 @@ public class ItemDAOImpl {
         }
     }
 
-//    public void updateItem(){
-//        if(CrudUtil.execute()){
-//
-//        }
-//    }
+    public void updateItem(String desc, BigDecimal unitPrice, int qoh, String code){
+        try {
+            if(CrudUtil.execute("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?",
+                    desc,unitPrice,qoh,code)){
+
+                new Alert(Alert.AlertType.CONFIRMATION,"Updated Item Successfully").show();
+            }else{
+                new Alert(Alert.AlertType.ERROR,"Couldn't Update Item").show();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void deleteItem(String id){
         try {
