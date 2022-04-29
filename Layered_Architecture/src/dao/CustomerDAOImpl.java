@@ -28,12 +28,6 @@ public class CustomerDAOImpl {
     }
 
     public void insertCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
-//        Connection connection = DBConnection.getDbConnection().getConnection();
-//        PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer (id,name, address) VALUES (?,?,?)");
-//        pstm.setString(1,customerDTO.getId());
-//        pstm.setString(2,customerDTO.getName());
-//        pstm.setString(3,customerDTO.getAddress());
-//        return pstm.executeUpdate()>0;
         if(CrudUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)",customerDTO.getId(),customerDTO.getName(),customerDTO.getAddress())){
             new Alert(Alert.AlertType.CONFIRMATION,"Customer Inserted Successfully").show();
         }else{
@@ -42,19 +36,21 @@ public class CustomerDAOImpl {
 
     }
 
-    public boolean updateCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("UPDATE Customer SET name=?, address=? WHERE id=?");
-        pstm.setString(1, customerDTO.getName());
-        pstm.setString(2, customerDTO.getAddress());
-        pstm.setString(3, customerDTO.getId());
-        return pstm.executeUpdate()>0;
+    public void updateCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
+
+        if(CrudUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?",customerDTO.getName(),customerDTO.getAddress(),
+                customerDTO.getId())){
+            new Alert(Alert.AlertType.CONFIRMATION,"Updated Customer Successfully");
+        }else{
+            new Alert(Alert.AlertType.ERROR,"Couldn't Update Customer!");
+        }
     }
 
-    public boolean deleteCustomer(String id) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("DELETE FROM Customer WHERE id=?");
-        pstm.setString(1, id);
-        return pstm.executeUpdate()>0;
+    public void deleteCustomer(String id) throws SQLException, ClassNotFoundException {
+        if(CrudUtil.execute("DELETE FROM Customer WHERE id=?",id)){
+            new Alert(Alert.AlertType.CONFIRMATION,"Deleted Customer Successfully");
+        }else{
+            new Alert(Alert.AlertType.ERROR,"Couldn't Delete Customer!");
+        }
     }
 }

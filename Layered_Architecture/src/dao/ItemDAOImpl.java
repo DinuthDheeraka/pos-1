@@ -31,4 +31,10 @@ public class ItemDAOImpl {
             new Alert(Alert.AlertType.ERROR,"Could't add Item!").show();
         }
     }
+
+//    public void updateItem(){
+//        if(CrudUtil.execute()){
+//
+//        }
+//    }
 }
