@@ -37,4 +37,16 @@ public class ItemDAOImpl {
 //
 //        }
 //    }
+
+    public void deleteItem(String id){
+        try {
+            if(CrudUtil.execute("DELETE FROM Item WHERE code=?",id)){
+               new Alert(Alert.AlertType.CONFIRMATION,"Item Deleted Succsessfully").show();
+            }else{
+                new Alert(Alert.AlertType.ERROR,"Couldn't Delete Item").show();
+            }
+        } catch (SQLException |ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
