@@ -53,4 +53,13 @@ public class CustomerDAOImpl {
             new Alert(Alert.AlertType.ERROR,"Couldn't Delete Customer!");
         }
     }
+
+    public String getCustomerLastId() throws SQLException, ClassNotFoundException {
+        String lastId = null;
+        ResultSet resultSet = CrudUtil.execute("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
+        if(resultSet.next()){
+            lastId = resultSet.getString(1);
+        }
+        return lastId;
+    }
 }

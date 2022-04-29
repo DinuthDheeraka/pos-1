@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.CustomerDTO;
+import util.IdsGenerator;
 import view.tdm.CustomerTM;
 
 import java.io.IOException;
@@ -115,7 +116,7 @@ public class ManageCustomersFormController {
         Platform.runLater(() -> primaryStage.sizeToScene());
     }
 
-    public void btnAddNew_OnAction(ActionEvent actionEvent) {
+    public void btnAddNew_OnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         txtCustomerId.setDisable(false);
         txtCustomerName.setDisable(false);
         txtCustomerAddress.setDisable(false);
@@ -218,32 +219,10 @@ public class ManageCustomersFormController {
         }
     }
 
-    private String generateNewId() {
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
-            ResultSet rst = connection.createStatement().executeQuery("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
-            if (rst.next()) {
-                String id = rst.getString("id");
-                int newCustomerId = Integer.parseInt(id.replace("C", "")) + 1;
-                return String.format("C%03d", newCustomerId);
-            } else {
-                return "C00-001";
-            }
-        } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "Failed to generate a new id " + e.getMessage()).show();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-        if (tblCustomers.getItems().isEmpty()) {
-            return "C00-001";
-        } else {
-            String id = getLastCustomerId();
-            int newCustomerId = Integer.parseInt(id.replace("C", "")) + 1;
-            return String.format("C00-%03d", newCustomerId);
-        }
-
+    private String generateNewId() throws SQLException, ClassNotFoundException {
+        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+        IdsGenerator idsGenerator = new IdsGenerator();
+        return idsGenerator.generateId("C", customerDAO.getCustomerLastId());
     }
 
     private String getLastCustomerId() {

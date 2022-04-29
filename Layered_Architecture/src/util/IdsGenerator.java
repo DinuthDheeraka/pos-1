@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class IdsGenerator {
 
-    public String generateId(String prefix, ArrayList<String> lastId){
-        if(lastId.size()>0){
-            int newCustomerId = Integer.parseInt(lastId.get(0).replace(prefix, "")) + 1;
+    public String generateId(String prefix,String lastId){
+        if(lastId!=null){
+            int newCustomerId = Integer.parseInt(lastId.replace(prefix, "")) + 1;
             return String.format(prefix+"%03d", newCustomerId);
         }
         else {
