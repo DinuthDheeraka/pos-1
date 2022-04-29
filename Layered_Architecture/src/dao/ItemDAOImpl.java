@@ -60,4 +60,19 @@ public class ItemDAOImpl {
             e.printStackTrace();
         }
     }
+
+    public boolean isExistsItem(String code){
+        boolean isExists = false;
+        try {
+            ResultSet resultSet = CrudUtil.execute("SELECT code FROM Item WHERE code=?",code);
+            if(resultSet.next()){
+                isExists = true;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return isExists;
+    }
 }
