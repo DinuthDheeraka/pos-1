@@ -18,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import util.IdsGenerator;
 import view.tdm.ItemTM;
 
 import java.io.IOException;
@@ -211,21 +212,8 @@ public class ManageItemsFormController {
 
 
     private String generateNewId() {
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
-            ResultSet rst = connection.createStatement().executeQuery("SELECT code FROM Item ORDER BY code DESC LIMIT 1;");
-            if (rst.next()) {
-                String id = rst.getString("code");
-                int newItemId = Integer.parseInt(id.replace("P", "")) + 1;
-                return String.format("P%03d", newItemId);
-            } else {
-                return "I00-001";
-            }
-        } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return "I00-001";
+        IdsGenerator idsGenerator = new IdsGenerator();
+        ItemDAOImpl itemDAO = new ItemDAOImpl();
+        return idsGenerator.generateId("P",itemDAO.getLastItemCode());
     }
 }

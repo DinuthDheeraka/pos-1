@@ -75,4 +75,19 @@ public class ItemDAOImpl {
         }
         return isExists;
     }
+
+    public String getLastItemCode(){
+        String lastCode = null;
+        try {
+            ResultSet resultSet = CrudUtil.execute("SELECT code FROM Item ORDER BY code DESC LIMIT 1;");
+            if(resultSet.next()){
+                lastCode = resultSet.getString(1);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return lastCode;
+    }
 }
