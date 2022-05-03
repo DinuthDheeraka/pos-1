@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import dao.ItemDAOContract;
 import dao.ItemDAOImpl;
 import db.DBConnection;
 import javafx.application.Platform;
@@ -41,6 +42,8 @@ public class ManageItemsFormController {
     public TableView<ItemTM> tblItems;
     public JFXTextField txtUnitPrice;
     public JFXButton btnAddNewItem;
+
+    public ItemDAOContract itemDAO = new ItemDAOImpl();
 
     public void initialize() {
         tblItems.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
@@ -129,7 +132,7 @@ public class ManageItemsFormController {
             if (!existItem(code)) {
                 new Alert(Alert.AlertType.ERROR, "There is no such item associated with the id " + code).show();
             }
-            ItemDAOImpl itemDAO = new ItemDAOImpl();
+//            ItemDAOImpl itemDAO = new ItemDAOImpl();
             itemDAO.deleteItem(code);
 
             tblItems.getItems().remove(tblItems.getSelectionModel().getSelectedItem());
@@ -170,7 +173,7 @@ public class ManageItemsFormController {
                     new Alert(Alert.AlertType.ERROR, code + " already exists").show();
                 }
                 //Save Item
-                ItemDAOImpl itemDAO =  new ItemDAOImpl();
+//                ItemDAOImpl itemDAO =  new ItemDAOImpl();
                 itemDAO.insertItem(new ItemTM(code,description,unitPrice,qtyOnHand));
                 tblItems.getItems().add(new ItemTM(code, description, unitPrice, qtyOnHand));
 
@@ -186,7 +189,7 @@ public class ManageItemsFormController {
                     new Alert(Alert.AlertType.ERROR, "There is no such item associated with the id " + code).show();
                 }
                 /*Update Item*/
-                ItemDAOImpl itemDAO = new ItemDAOImpl();
+//                ItemDAOImpl itemDAO = new ItemDAOImpl();
                 itemDAO.updateItem(description,unitPrice,qtyOnHand,code);
 
                 ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
@@ -206,14 +209,14 @@ public class ManageItemsFormController {
 
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
-        ItemDAOImpl itemDAO = new ItemDAOImpl();
+//        ItemDAOImpl itemDAO = new ItemDAOImpl();
         return itemDAO.isExistsItem(code);
     }
 
 
     private String generateNewId() {
         IdsGenerator idsGenerator = new IdsGenerator();
-        ItemDAOImpl itemDAO = new ItemDAOImpl();
+//        ItemDAOImpl itemDAO = new ItemDAOImpl();
         return idsGenerator.generateId("P",itemDAO.getLastItemCode());
     }
 }
