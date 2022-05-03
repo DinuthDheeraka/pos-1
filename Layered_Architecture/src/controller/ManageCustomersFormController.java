@@ -220,8 +220,7 @@ public class ManageCustomersFormController {
 
     private String generateNewId() throws SQLException, ClassNotFoundException {
 //        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
-        IdsGenerator idsGenerator = new IdsGenerator();
-        return idsGenerator.generateId("C", customerDAO.getCustomerLastId());
+        return IdsGenerator.generateId("C", customerDAO.getCustomerLastId());
     }
 
     private String getLastCustomerId() {

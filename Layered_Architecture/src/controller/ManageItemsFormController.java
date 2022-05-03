@@ -215,8 +215,7 @@ public class ManageItemsFormController {
 
 
     private String generateNewId() {
-        IdsGenerator idsGenerator = new IdsGenerator();
 //        ItemDAOImpl itemDAO = new ItemDAOImpl();
-        return idsGenerator.generateId("P",itemDAO.getLastItemCode());
+        return IdsGenerator.generateId("P",itemDAO.getLastItemCode());
     }
 }
