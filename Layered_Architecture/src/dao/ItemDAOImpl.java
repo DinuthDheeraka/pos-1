@@ -83,9 +83,7 @@ public class ItemDAOImpl {
             if(resultSet.next()){
                 lastCode = resultSet.getString(1);
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return lastCode;
