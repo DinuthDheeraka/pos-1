@@ -62,4 +62,13 @@ public class CustomerDAOImpl implements CustomerDAOContract{
         }
         return lastId;
     }
+
+    public boolean isExistsCustomer(String id) throws SQLException, ClassNotFoundException {
+        boolean isExists = false;
+        ResultSet resultSet = CrudUtil.execute("SELECT id FROM Customer WHERE id=?",id);
+        if(resultSet.next()){
+            isExists = true;
+        }
+        return isExists;
+    }
 }
