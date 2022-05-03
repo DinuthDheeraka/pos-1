@@ -18,4 +18,17 @@ public class PlaceOrderDAOImpl implements PlaceOrderDAOContract{
         }
         return lastId;
     }
+
+    public boolean isExistsOrder(String id){
+        boolean isExists = false;
+        try {
+            ResultSet resultSet = CrudUtil.execute("SELECT oid FROM `Orders` WHERE oid=?",id);
+            if(resultSet.next()){
+                isExists = true;
+            }
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+        return isExists;
+    }
 }
