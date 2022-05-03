@@ -22,7 +22,7 @@ public class PlaceOrderDAOImpl implements PlaceOrderDAOContract{
     public boolean isExistsOrder(String id){
         boolean isExists = false;
         try {
-            ResultSet resultSet = CrudUtil.execute("SELECT oid FROM `Orders` WHERE oid=?",id);
+            ResultSet resultSet = CrudUtil.execute("SELECT id FROM `Orders` WHERE id=?",id);
             if(resultSet.next()){
                 isExists = true;
             }
@@ -30,5 +30,15 @@ public class PlaceOrderDAOImpl implements PlaceOrderDAOContract{
             throwables.printStackTrace();
         }
         return isExists;
+    }
+
+    public void insertOrder(String orderId,String date,String customerId){
+        try {
+            if(CrudUtil.execute("INSERT INTO `Orders` (id, date, customerId) VALUES (?,?,?)",orderId,date,customerId)){
+            }else{
+            }
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

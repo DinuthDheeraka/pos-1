@@ -303,24 +303,26 @@ public class PlaceOrderFormController {
             }
 
             connection.setAutoCommit(false);
-            PreparedStatement stm = connection.prepareStatement("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)");
-            stm.setString(1, orderId);
-            stm.setDate(2, Date.valueOf(orderDate));
-            stm.setString(3, customerId);
 
-            if (stm.executeUpdate() != 1) {
-                connection.rollback();
-                connection.setAutoCommit(true);
-                return false;
-            }
+//            PreparedStatement stm = connection.prepareStatement("INSERT INTO `Orders` (id, date, customerId) VALUES (?,?,?)");
+//            stm.setString(1, orderId);
+//            stm.setDate(2, Date.valueOf(orderDate));
+//            stm.setString(3, customerId);
+//
+//            if (stm.executeUpdate() != 1) {
+//                connection.rollback();
+//                connection.setAutoCommit(true);
+//                return false;
+//            }
+            placeOrderDAOContract.insertOrder(orderId,String.valueOf(orderDate),customerId);
 
-            stm = connection.prepareStatement("INSERT INTO OrderDetails (oid, itemCode, unitPrice, qty) VALUES (?,?,?,?)");
+            PreparedStatement stm = connection.prepareStatement("INSERT INTO orderdetail (orderId, itemCode, qty, unitPrice) VALUES (?,?,?,?)");
 
             for (OrderDetailDTO detail : orderDetails) {
                 stm.setString(1, orderId);
                 stm.setString(2, detail.getItemCode());
-                stm.setBigDecimal(3, detail.getUnitPrice());
-                stm.setInt(4, detail.getQty());
+                stm.setInt(3, detail.getQty());
+                stm.setBigDecimal(4, detail.getUnitPrice());
 
                 if (stm.executeUpdate() != 1) {
                     connection.rollback();
