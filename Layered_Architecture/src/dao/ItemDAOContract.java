@@ -1,5 +1,6 @@
 package dao;
 
+import model.ItemDTO;
 import view.tdm.ItemTM;
 
 import java.math.BigDecimal;
@@ -13,4 +14,5 @@ public interface ItemDAOContract {
     void deleteItem(String id);
     boolean isExistsItem(String code);
     String getLastItemCode();
+    ItemDTO findItem(String id);
 }

@@ -132,7 +132,6 @@ public class ManageItemsFormController {
             if (!existItem(code)) {
                 new Alert(Alert.AlertType.ERROR, "There is no such item associated with the id " + code).show();
             }
-//            ItemDAOImpl itemDAO = new ItemDAOImpl();
             itemDAO.deleteItem(code);
 
             tblItems.getItems().remove(tblItems.getSelectionModel().getSelectedItem());
@@ -173,7 +172,6 @@ public class ManageItemsFormController {
                     new Alert(Alert.AlertType.ERROR, code + " already exists").show();
                 }
                 //Save Item
-//                ItemDAOImpl itemDAO =  new ItemDAOImpl();
                 itemDAO.insertItem(new ItemTM(code,description,unitPrice,qtyOnHand));
                 tblItems.getItems().add(new ItemTM(code, description, unitPrice, qtyOnHand));
 
@@ -189,7 +187,6 @@ public class ManageItemsFormController {
                     new Alert(Alert.AlertType.ERROR, "There is no such item associated with the id " + code).show();
                 }
                 /*Update Item*/
-//                ItemDAOImpl itemDAO = new ItemDAOImpl();
                 itemDAO.updateItem(description,unitPrice,qtyOnHand,code);
 
                 ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
@@ -206,16 +203,10 @@ public class ManageItemsFormController {
 
         btnAddNewItem.fire();
     }
-
-
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
-//        ItemDAOImpl itemDAO = new ItemDAOImpl();
         return itemDAO.isExistsItem(code);
     }
-
-
     private String generateNewId() {
-//        ItemDAOImpl itemDAO = new ItemDAOImpl();
         return IdsGenerator.generateId("P",itemDAO.getLastItemCode());
     }
 }

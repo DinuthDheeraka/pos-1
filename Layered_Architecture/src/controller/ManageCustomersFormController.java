@@ -78,8 +78,6 @@ public class ManageCustomersFormController {
         tblCustomers.getItems().clear();
         /*Get all customers*/
         try {
-
-//            CustomerDAOImpl customerDAO = new CustomerDAOImpl();
             ArrayList<CustomerDTO> allCustomers = customerDAO.getAllCustomers();
 
             for (CustomerDTO customer : allCustomers) {
@@ -154,8 +152,6 @@ public class ManageCustomersFormController {
                 if (existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, id + " already exists").show();
                 }
-
-//                CustomerDAOImpl customerDAO = new CustomerDAOImpl();
                 customerDAO.insertCustomer(new CustomerDTO(id,name,address));
 
                 tblCustomers.getItems().add(new CustomerTM(id, name, address));
@@ -172,8 +168,6 @@ public class ManageCustomersFormController {
                 if (!existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
-
-//                CustomerDAOImpl customerDAO = new CustomerDAOImpl();
                 customerDAO.updateCustomer(new CustomerDTO(id,name,address));
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the customer " + id + e.getMessage()).show();
@@ -189,13 +183,9 @@ public class ManageCustomersFormController {
 
         btnAddNewCustomer.fire();
     }
-
-
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
         return customerDAO.isExistsCustomer(id);
     }
-
-
     public void btnDelete_OnAction(ActionEvent actionEvent) {
         /*Delete Customer*/
         String id = tblCustomers.getSelectionModel().getSelectedItem().getId();
@@ -203,10 +193,7 @@ public class ManageCustomersFormController {
             if (!existCustomer(id)) {
                 new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
             }
-
-//            CustomerDAOImpl customerDAO = new CustomerDAOImpl();
             customerDAO.deleteCustomer(id);
-
             tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
             tblCustomers.getSelectionModel().clearSelection();
             initUI();
@@ -217,12 +204,9 @@ public class ManageCustomersFormController {
             e.printStackTrace();
         }
     }
-
     private String generateNewId() throws SQLException, ClassNotFoundException {
-//        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
         return IdsGenerator.generateId("C", customerDAO.getCustomerLastId());
     }
-
     private String getLastCustomerId() {
         List<CustomerTM> tempCustomersList = new ArrayList<>(tblCustomers.getItems());
         Collections.sort(tempCustomersList);

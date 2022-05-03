@@ -1,6 +1,7 @@
 package dao;
 
 import javafx.scene.control.Alert;
+import model.ItemDTO;
 import util.CrudUtil;
 import view.tdm.ItemTM;
 
@@ -87,5 +88,18 @@ public class ItemDAOImpl implements ItemDAOContract{
             e.printStackTrace();
         }
         return lastCode;
+    }
+
+    public ItemDTO findItem(String id)  {
+        ItemDTO itemDTO = null;
+        try {
+            ResultSet rst = CrudUtil.execute("SELECT * FROM Item WHERE code=?",id);
+            if(rst.next()){
+                itemDTO = new ItemDTO(id, rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
+            }
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+        return itemDTO;
     }
 }
