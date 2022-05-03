@@ -13,4 +13,5 @@ public interface CustomerDAOContract {
     String getCustomerLastId() throws SQLException, ClassNotFoundException;
     boolean isExistsCustomer(String id) throws SQLException, ClassNotFoundException;
     CustomerDTO getCustomer(String id);
+    ArrayList<String> getAllCustomerIds();
 }

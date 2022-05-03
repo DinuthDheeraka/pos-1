@@ -196,19 +196,8 @@ public class PlaceOrderFormController {
     }
 
     private void loadAllCustomerIds() {
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
-
-            while (rst.next()) {
-                cmbCustomerId.getItems().add(rst.getString("id"));
-            }
-
-        } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "Failed to load customer ids").show();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        for (String s: customerDAOContract.getAllCustomerIds()) {
+            cmbCustomerId.getItems().add(s);
         }
     }
 

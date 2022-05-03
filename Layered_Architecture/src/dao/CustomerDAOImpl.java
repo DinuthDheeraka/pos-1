@@ -84,4 +84,17 @@ public class CustomerDAOImpl implements CustomerDAOContract{
         }
         return customerDTO;
     }
+
+    public ArrayList<String> getAllCustomerIds(){
+        ArrayList<String> arrayList = new ArrayList();
+        try {
+            ResultSet resultSet = CrudUtil.execute("SELECT * FROM Customer");
+            while(resultSet.next()){
+                arrayList.add(resultSet.getString("id"));
+            }
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+        return arrayList;
+    }
 }
