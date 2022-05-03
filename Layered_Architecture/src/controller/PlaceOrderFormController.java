@@ -59,6 +59,7 @@ public class PlaceOrderFormController {
     ItemDAOContract itemDAOContract = new ItemDAOImpl();
     CustomerDAOContract customerDAOContract = new CustomerDAOImpl();
     PlaceOrderDAOContract placeOrderDAOContract = new PlaceOrderDAOImpl();
+    OrderDetailDAOImplContract orderDetailDAOImplContract = new OrderDetailDAOImpl();
 
     public void initialize() throws SQLException, ClassNotFoundException {
 
@@ -319,16 +320,14 @@ public class PlaceOrderFormController {
             PreparedStatement stm = connection.prepareStatement("INSERT INTO orderdetail (orderId, itemCode, qty, unitPrice) VALUES (?,?,?,?)");
 
             for (OrderDetailDTO detail : orderDetails) {
-                stm.setString(1, orderId);
-                stm.setString(2, detail.getItemCode());
-                stm.setInt(3, detail.getQty());
-                stm.setBigDecimal(4, detail.getUnitPrice());
+                orderDetailDAOImplContract.insertOrderDetail(orderId,detail.getItemCode(),detail.getQty(),
+                        detail.getUnitPrice());
 
-                if (stm.executeUpdate() != 1) {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                    return false;
-                }
+//                if (stm.executeUpdate() != 1) {
+//                    connection.rollback();
+//                    connection.setAutoCommit(true);
+//                    return false;
+//                }
 
 //                //Search & Update Item
                 ItemDTO item = findItem(detail.getItemCode());
