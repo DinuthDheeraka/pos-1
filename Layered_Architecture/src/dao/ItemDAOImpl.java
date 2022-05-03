@@ -102,4 +102,17 @@ public class ItemDAOImpl implements ItemDAOContract{
         }
         return itemDTO;
     }
+
+    public ArrayList<String> getAllItemCodes(){
+        ArrayList<String> arrayList = new ArrayList();
+        try {
+            ResultSet resultSet = CrudUtil.execute("SELECT code FROM Item");
+            while (resultSet.next()){
+                arrayList.add(resultSet.getString(1));
+            }
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+        return arrayList;
+    }
 }

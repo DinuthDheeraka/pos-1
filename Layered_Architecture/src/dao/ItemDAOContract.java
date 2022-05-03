@@ -16,4 +16,5 @@ public interface ItemDAOContract {
     boolean isExistsItem(String code);
     String getLastItemCode();
     ItemDTO findItem(String id);
+    ArrayList<String> getAllItemCodes();
 }
