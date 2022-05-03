@@ -3,6 +3,8 @@ package controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import dao.CustomerDAOContract;
+import dao.CustomerDAOImpl;
 import dao.ItemDAOContract;
 import dao.ItemDAOImpl;
 import db.DBConnection;
@@ -56,6 +58,7 @@ public class PlaceOrderFormController {
     private String orderId;
 
     ItemDAOContract itemDAOContract = new ItemDAOImpl();
+    CustomerDAOContract customerDAOContract = new CustomerDAOImpl();
 
     public void initialize() throws SQLException, ClassNotFoundException {
 
@@ -108,12 +111,7 @@ public class PlaceOrderFormController {
                             new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + newValue + "").show();
                         }
 
-                        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer WHERE id=?");
-                        pstm.setString(1, newValue + "");
-                        ResultSet rst = pstm.executeQuery();
-                        rst.next();
-                        CustomerDTO customerDTO = new CustomerDTO(newValue + "", rst.getString("name"), rst.getString("address"));
-
+                        CustomerDTO customerDTO = customerDAOContract.getCustomer(newValue+"");
                         txtCustomerName.setText(customerDTO.getName());
                     } catch (SQLException e) {
                         new Alert(Alert.AlertType.ERROR, "Failed to find the customer " + newValue + "" + e).show();
@@ -403,7 +401,6 @@ public class PlaceOrderFormController {
         }
         return false;
     }
-
 
     public ItemDTO findItem(String code) {
         return itemDAOContract.findItem(code);

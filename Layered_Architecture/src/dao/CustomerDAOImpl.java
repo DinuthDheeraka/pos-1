@@ -71,4 +71,17 @@ public class CustomerDAOImpl implements CustomerDAOContract{
         }
         return isExists;
     }
+
+    public CustomerDTO getCustomer(String id){
+        CustomerDTO customerDTO = null;
+        try {
+            ResultSet rst = CrudUtil.execute("SELECT * FROM Customer WHERE id=?",id);
+            if(rst.next()){
+                customerDTO = new CustomerDTO(id, rst.getString("name"), rst.getString("address"));;
+            }
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+        return customerDTO;
+    }
 }

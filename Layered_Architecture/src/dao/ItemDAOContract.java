@@ -1,5 +1,6 @@
 package dao;
 
+import model.CustomerDTO;
 import model.ItemDTO;
 import view.tdm.ItemTM;
 
