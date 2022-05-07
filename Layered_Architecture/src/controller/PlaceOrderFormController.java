@@ -56,7 +56,7 @@ public class PlaceOrderFormController {
     public Label lblTotal;
     private String orderId;
 
-    ItemDAOContract itemDAOContract = new ItemDAOImpl();
+    CrudDAO<ItemDTO,String> itemDAOContract = new ItemDAOImpl();
     CrudDAO<CustomerDTO,String> customerDAOContract = new CustomerDAOImpl();
     PlaceOrderDAOContract placeOrderDAOContract = new PlaceOrderDAOImpl();
     OrderDetailDAOImplContract orderDetailDAOImplContract = new OrderDetailDAOImpl();
@@ -139,7 +139,7 @@ public class PlaceOrderFormController {
 //                        throw new NotFoundException("There is no such item associated with the id " + code);
                     }
 
-                    ItemDTO item = itemDAOContract.findItem(newItemCode+"");
+                    ItemDTO item = itemDAOContract.get(newItemCode+"");
 
                     txtDescription.setText(item.getDescription());
                     txtUnitPrice.setText(item.getUnitPrice().setScale(2).toString());
@@ -184,7 +184,7 @@ public class PlaceOrderFormController {
     }
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
-        return itemDAOContract.isExistsItem(code);
+        return itemDAOContract.isExists(code);
     }
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
@@ -202,7 +202,7 @@ public class PlaceOrderFormController {
     }
 
     private void loadAllItemCodes() {
-        for (String s: itemDAOContract.getAllItemCodes()) {
+        for (String s: itemDAOContract.getAllIds()) {
             cmbItemCode.getItems().add(s);
         }
     }
@@ -273,7 +273,7 @@ public class PlaceOrderFormController {
     public void txtQty_OnAction(ActionEvent actionEvent) {
     }
 
-    public void btnPlaceOrder_OnAction(ActionEvent actionEvent) {
+    public void btnPlaceOrder_OnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         boolean b = saveOrder(orderId, LocalDate.now(), cmbCustomerId.getValue(),
                 tblOrderDetails.getItems().stream().map(tm -> new OrderDetailDTO("",tm.getCode(), tm.getQty(), tm.getUnitPrice())).collect(Collectors.toList()));
 
@@ -292,7 +292,7 @@ public class PlaceOrderFormController {
         calculateTotal();
     }
 
-    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) {
+    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
         /*Transaction*/
         /*if order id already exist*/
         if (placeOrderDAOContract.isExistsOrder(orderId)) {
@@ -307,13 +307,12 @@ public class PlaceOrderFormController {
             ItemDTO item = findItem(detail.getItemCode());
             item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
 
-            itemDAOContract.updateItem(item.getDescription(),item.getUnitPrice(),item.getQtyOnHand(),
-                    item.getCode());
+            itemDAOContract.update(new ItemDTO(item.getCode(),item.getDescription(),item.getUnitPrice(),item.getQtyOnHand()));
         }
         return true;
     }
 
     public ItemDTO findItem(String code) {
-        return itemDAOContract.findItem(code);
+        return itemDAOContract.get(code);
     }
 }

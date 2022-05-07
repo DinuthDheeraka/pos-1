@@ -12,6 +12,6 @@ public interface CrudDAO <DTO,ID>{
     void delete(ID id) throws SQLException, ClassNotFoundException;
     ID getLastId() throws SQLException, ClassNotFoundException;
     boolean isExists(ID id) throws SQLException, ClassNotFoundException;
-    CustomerDTO get(ID id);
+    DTO get(ID id);
     ArrayList<ID> getAllIds();
 }

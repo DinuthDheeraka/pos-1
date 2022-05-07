@@ -1,6 +1,7 @@
 package dao;
 
 import javafx.scene.control.Alert;
+import model.CustomerDTO;
 import model.ItemDTO;
 import util.CrudUtil;
 import view.tdm.ItemTM;
@@ -10,13 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ItemDAOImpl implements ItemDAOContract{
-    public ArrayList<ItemTM> getAllItems(){
-        ArrayList<ItemTM> arrayList = new ArrayList<>();
+public class ItemDAOImpl implements CrudDAO<ItemDTO,String>{
+    @Override
+    public ArrayList<ItemDTO> getAll() throws SQLException, ClassNotFoundException {
+        ArrayList<ItemDTO> arrayList = new ArrayList<>();
         try {
             ResultSet set = CrudUtil.execute("SELECT * FROM Item;");
             while (set.next()){
-                arrayList.add(new ItemTM(set.getString(1),set.getString(2),
+                arrayList.add(new ItemDTO(set.getString(1),set.getString(2),
                         set.getBigDecimal(3),set.getInt(4)));
             }
         } catch (SQLException|ClassNotFoundException e) {
@@ -25,7 +27,8 @@ public class ItemDAOImpl implements ItemDAOContract{
         return arrayList;
     }
 
-    public void insertItem(ItemTM tm) throws SQLException, ClassNotFoundException {
+    @Override
+    public void insert(ItemDTO tm) throws SQLException, ClassNotFoundException {
         if(CrudUtil.execute("INSERT INTO Item (code, description, unitPrice, qtyOnHand) VALUES (?,?,?,?)",
                 tm.getCode(),tm.getDescription(),tm.getUnitPrice(),tm.getQtyOnHand())){
             new Alert(Alert.AlertType.CONFIRMATION,"Added Item Successfully").show();
@@ -34,10 +37,11 @@ public class ItemDAOImpl implements ItemDAOContract{
         }
     }
 
-    public void updateItem(String desc, BigDecimal unitPrice, int qoh, String code){
+    @Override
+    public void update(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
         try {
             if(CrudUtil.execute("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?",
-                    desc,unitPrice,qoh,code)){
+                    itemDTO.getDescription(),itemDTO.getUnitPrice(),itemDTO.getQtyOnHand(),itemDTO.getCode())){
 
                 new Alert(Alert.AlertType.CONFIRMATION,"Updated Item Successfully").show();
             }else{
@@ -50,10 +54,11 @@ public class ItemDAOImpl implements ItemDAOContract{
         }
     }
 
-    public void deleteItem(String id){
+    @Override
+    public void delete(String s) throws SQLException, ClassNotFoundException {
         try {
-            if(CrudUtil.execute("DELETE FROM Item WHERE code=?",id)){
-               new Alert(Alert.AlertType.CONFIRMATION,"Item Deleted Succsessfully").show();
+            if(CrudUtil.execute("DELETE FROM Item WHERE code=?",s)){
+                new Alert(Alert.AlertType.CONFIRMATION,"Item Deleted Succsessfully").show();
             }else{
                 new Alert(Alert.AlertType.ERROR,"Couldn't Delete Item").show();
             }
@@ -62,22 +67,8 @@ public class ItemDAOImpl implements ItemDAOContract{
         }
     }
 
-    public boolean isExistsItem(String code){
-        boolean isExists = false;
-        try {
-            ResultSet resultSet = CrudUtil.execute("SELECT code FROM Item WHERE code=?",code);
-            if(resultSet.next()){
-                isExists = true;
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return isExists;
-    }
-
-    public String getLastItemCode(){
+    @Override
+    public String getLastId() throws SQLException, ClassNotFoundException {
         String lastCode = null;
         try {
             ResultSet resultSet = CrudUtil.execute("SELECT code FROM Item ORDER BY code DESC LIMIT 1;");
@@ -90,12 +81,29 @@ public class ItemDAOImpl implements ItemDAOContract{
         return lastCode;
     }
 
-    public ItemDTO findItem(String id)  {
+    @Override
+    public boolean isExists(String s) throws SQLException, ClassNotFoundException {
+        boolean isExists = false;
+        try {
+            ResultSet resultSet = CrudUtil.execute("SELECT code FROM Item WHERE code=?",s);
+            if(resultSet.next()){
+                isExists = true;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return isExists;
+    }
+
+    @Override
+    public ItemDTO get(String s) {
         ItemDTO itemDTO = null;
         try {
-            ResultSet rst = CrudUtil.execute("SELECT * FROM Item WHERE code=?",id);
+            ResultSet rst = CrudUtil.execute("SELECT * FROM Item WHERE code=?",s);
             if(rst.next()){
-                itemDTO = new ItemDTO(id, rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
+                itemDTO = new ItemDTO(s, rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
             }
         } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
@@ -103,7 +111,8 @@ public class ItemDAOImpl implements ItemDAOContract{
         return itemDTO;
     }
 
-    public ArrayList<String> getAllItemCodes(){
+    @Override
+    public ArrayList<String> getAllIds() {
         ArrayList<String> arrayList = new ArrayList();
         try {
             ResultSet resultSet = CrudUtil.execute("SELECT code FROM Item");
