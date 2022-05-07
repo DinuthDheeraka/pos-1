@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import dao.CrudDAO;
 import dao.CustomerDAOContract;
 import dao.CustomerDAOImpl;
 import db.DBConnection;
@@ -45,7 +46,7 @@ public class ManageCustomersFormController {
     public JFXTextField txtCustomerAddress;
     public TableView<CustomerTM> tblCustomers;
     public JFXButton btnAddNewCustomer;
-    public CustomerDAOContract customerDAO = new CustomerDAOImpl();
+    public CrudDAO<CustomerDTO,String> customerDAO = new CustomerDAOImpl();
 
     public void initialize() {
         tblCustomers.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -78,7 +79,7 @@ public class ManageCustomersFormController {
         tblCustomers.getItems().clear();
         /*Get all customers*/
         try {
-            ArrayList<CustomerDTO> allCustomers = customerDAO.getAllCustomers();
+            ArrayList<CustomerDTO> allCustomers = customerDAO.getAll();
 
             for (CustomerDTO customer : allCustomers) {
                 tblCustomers.getItems().add(new CustomerTM(customer.getId(), customer.getName(), customer.getAddress()));
@@ -152,7 +153,7 @@ public class ManageCustomersFormController {
                 if (existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, id + " already exists").show();
                 }
-                customerDAO.insertCustomer(new CustomerDTO(id,name,address));
+                customerDAO.insert(new CustomerDTO(id,name,address));
 
                 tblCustomers.getItems().add(new CustomerTM(id, name, address));
             } catch (SQLException e) {
@@ -168,7 +169,7 @@ public class ManageCustomersFormController {
                 if (!existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
-                customerDAO.updateCustomer(new CustomerDTO(id,name,address));
+                customerDAO.update(new CustomerDTO(id,name,address));
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the customer " + id + e.getMessage()).show();
             } catch (ClassNotFoundException e) {
@@ -184,7 +185,7 @@ public class ManageCustomersFormController {
         btnAddNewCustomer.fire();
     }
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        return customerDAO.isExistsCustomer(id);
+        return customerDAO.isExists(id);
     }
     public void btnDelete_OnAction(ActionEvent actionEvent) {
         /*Delete Customer*/
@@ -193,7 +194,7 @@ public class ManageCustomersFormController {
             if (!existCustomer(id)) {
                 new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
             }
-            customerDAO.deleteCustomer(id);
+            customerDAO.delete(id);
             tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
             tblCustomers.getSelectionModel().clearSelection();
             initUI();
@@ -205,7 +206,7 @@ public class ManageCustomersFormController {
         }
     }
     private String generateNewId() throws SQLException, ClassNotFoundException {
-        return IdsGenerator.generateId("C", customerDAO.getCustomerLastId());
+        return IdsGenerator.generateId("C", (String) customerDAO.getLastId());
     }
     private String getLastCustomerId() {
         List<CustomerTM> tempCustomersList = new ArrayList<>(tblCustomers.getItems());

@@ -13,9 +13,9 @@ import java.util.ArrayList;
  * @since : 0.1.0
  **/
 
-public class CustomerDAOImpl implements CustomerDAOContract{
-
-    public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
+public class CustomerDAOImpl implements CrudDAO<CustomerDTO,String>{
+    @Override
+    public ArrayList<CustomerDTO> getAll() throws SQLException, ClassNotFoundException {
         ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
         ResultSet rst = CrudUtil.execute("SELECT * FROM Customer");
         while (rst.next()) {
@@ -27,16 +27,16 @@ public class CustomerDAOImpl implements CustomerDAOContract{
         return allCustomers;
     }
 
-    public void insertCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
+    @Override
+    public void insert(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
         if(CrudUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)",customerDTO.getId(),customerDTO.getName(),customerDTO.getAddress())){
             new Alert(Alert.AlertType.CONFIRMATION,"Customer Inserted Successfully").show();
         }else{
             new Alert(Alert.AlertType.CONFIRMATION,"Could't Insert Customer").show();
         }
-
     }
 
-    public void updateCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
+    public void update(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
 
         if(CrudUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?",customerDTO.getName(),customerDTO.getAddress(),
                 customerDTO.getId())){
@@ -46,7 +46,7 @@ public class CustomerDAOImpl implements CustomerDAOContract{
         }
     }
 
-    public void deleteCustomer(String id) throws SQLException, ClassNotFoundException {
+    public void delete(String id) throws SQLException, ClassNotFoundException {
         if(CrudUtil.execute("DELETE FROM Customer WHERE id=?",id)){
             new Alert(Alert.AlertType.CONFIRMATION,"Deleted Customer Successfully");
         }else{
@@ -54,7 +54,7 @@ public class CustomerDAOImpl implements CustomerDAOContract{
         }
     }
 
-    public String getCustomerLastId() throws SQLException, ClassNotFoundException {
+    public String getLastId() throws SQLException, ClassNotFoundException {
         String lastId = null;
         ResultSet resultSet = CrudUtil.execute("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
         if(resultSet.next()){
@@ -63,7 +63,7 @@ public class CustomerDAOImpl implements CustomerDAOContract{
         return lastId;
     }
 
-    public boolean isExistsCustomer(String id) throws SQLException, ClassNotFoundException {
+    public boolean isExists(String id) throws SQLException, ClassNotFoundException {
         boolean isExists = false;
         ResultSet resultSet = CrudUtil.execute("SELECT id FROM Customer WHERE id=?",id);
         if(resultSet.next()){
@@ -72,7 +72,7 @@ public class CustomerDAOImpl implements CustomerDAOContract{
         return isExists;
     }
 
-    public CustomerDTO getCustomer(String id){
+    public CustomerDTO get(String id){
         CustomerDTO customerDTO = null;
         try {
             ResultSet rst = CrudUtil.execute("SELECT * FROM Customer WHERE id=?",id);
@@ -85,7 +85,7 @@ public class CustomerDAOImpl implements CustomerDAOContract{
         return customerDTO;
     }
 
-    public ArrayList<String> getAllCustomerIds(){
+    public ArrayList<String> getAllIds(){
         ArrayList<String> arrayList = new ArrayList();
         try {
             ResultSet resultSet = CrudUtil.execute("SELECT * FROM Customer");
