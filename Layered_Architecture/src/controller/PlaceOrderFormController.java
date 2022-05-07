@@ -105,7 +105,7 @@ public class PlaceOrderFormController {
             if (newValue != null) {
                 try {
                     /*Search Customer*/
-                    Connection connection = DBConnection.getDbConnection().getConnection();
+                    //Connection connection = DBConnection.getDbConnection().getConnection();
                     try {
                         if (!existCustomer(newValue + "")) {
 //                            "There is no such customer associated with the id " + id
@@ -118,8 +118,6 @@ public class PlaceOrderFormController {
                         new Alert(Alert.AlertType.ERROR, "Failed to find the customer " + newValue + "" + e).show();
                     }
 
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -277,7 +275,7 @@ public class PlaceOrderFormController {
 
     public void btnPlaceOrder_OnAction(ActionEvent actionEvent) {
         boolean b = saveOrder(orderId, LocalDate.now(), cmbCustomerId.getValue(),
-                tblOrderDetails.getItems().stream().map(tm -> new OrderDetailDTO(tm.getCode(), tm.getQty(), tm.getUnitPrice())).collect(Collectors.toList()));
+                tblOrderDetails.getItems().stream().map(tm -> new OrderDetailDTO("",tm.getCode(), tm.getQty(), tm.getUnitPrice())).collect(Collectors.toList()));
 
         if (b) {
             new Alert(Alert.AlertType.INFORMATION, "Order has been placed successfully").show();
@@ -296,66 +294,23 @@ public class PlaceOrderFormController {
 
     public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) {
         /*Transaction*/
-        Connection connection = null;
-        try {
-            connection = DBConnection.getDbConnection().getConnection();
-            /*if order id already exist*/
-            if (placeOrderDAOContract.isExistsOrder(orderId)) {
-            }
-
-            connection.setAutoCommit(false);
-
-//            PreparedStatement stm = connection.prepareStatement("INSERT INTO `Orders` (id, date, customerId) VALUES (?,?,?)");
-//            stm.setString(1, orderId);
-//            stm.setDate(2, Date.valueOf(orderDate));
-//            stm.setString(3, customerId);
-//
-//            if (stm.executeUpdate() != 1) {
-//                connection.rollback();
-//                connection.setAutoCommit(true);
-//                return false;
-//            }
-            placeOrderDAOContract.insertOrder(orderId,String.valueOf(orderDate),customerId);
-
-            PreparedStatement stm = connection.prepareStatement("INSERT INTO orderdetail (orderId, itemCode, qty, unitPrice) VALUES (?,?,?,?)");
-
-            for (OrderDetailDTO detail : orderDetails) {
-                orderDetailDAOImplContract.insertOrderDetail(orderId,detail.getItemCode(),detail.getQty(),
-                        detail.getUnitPrice());
-
-//                if (stm.executeUpdate() != 1) {
-//                    connection.rollback();
-//                    connection.setAutoCommit(true);
-//                    return false;
-//                }
-
-//                //Search & Update Item
-                ItemDTO item = findItem(detail.getItemCode());
-                item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
-
-                PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
-                pstm.setString(1, item.getDescription());
-                pstm.setBigDecimal(2, item.getUnitPrice());
-                pstm.setInt(3, item.getQtyOnHand());
-                pstm.setString(4, item.getCode());
-
-                if (!(pstm.executeUpdate() > 0)) {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                    return false;
-                }
-            }
-
-            connection.commit();
-            connection.setAutoCommit(true);
-            return true;
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        /*if order id already exist*/
+        if (placeOrderDAOContract.isExistsOrder(orderId)) {
         }
-        return false;
+        placeOrderDAOContract.insertOrder(orderId,String.valueOf(orderDate),customerId);
+
+        for (OrderDetailDTO detail : orderDetails) {
+            orderDetailDAOImplContract.insertOrderDetail(new OrderDetailDTO(orderId,detail.getItemCode(),detail.getQty(),
+                    detail.getUnitPrice()));
+
+            //Search & Update Item
+            ItemDTO item = findItem(detail.getItemCode());
+            item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
+
+            itemDAOContract.updateItem(item.getDescription(),item.getUnitPrice(),item.getQtyOnHand(),
+                    item.getCode());
+        }
+        return true;
     }
 
     public ItemDTO findItem(String code) {

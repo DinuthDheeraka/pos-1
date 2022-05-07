@@ -1,15 +1,16 @@
 package dao;
 
+import model.OrderDetailDTO;
 import util.CrudUtil;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
 public class OrderDetailDAOImpl implements OrderDetailDAOImplContract{
-    public void insertOrderDetail(String orderId, String itemCode, int qty, BigDecimal uPrice){
+    public void insertOrderDetail(OrderDetailDTO dto){
         try {
             if(CrudUtil.execute("INSERT INTO orderdetail (orderId, itemCode, qty, unitPrice) VALUES (?,?,?,?)",
-                    orderId,itemCode,qty,uPrice)){
+                    dto.getOrderId(),dto.getItemCode(),dto.getQty(),dto.getUnitPrice())){
 
             }
         } catch (SQLException | ClassNotFoundException throwables) {
