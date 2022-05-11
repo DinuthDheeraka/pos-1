@@ -1,4 +1,6 @@
 package dao.custom.impl;
 
-public class JoinQueryDAOImpl {
+import dao.custom.JoinQueryDAO;
+
+public class JoinQueryDAOImpl implements JoinQueryDAO {
 }
