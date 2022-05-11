@@ -18,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.CustomerDTO;
 import model.ItemDTO;
+import model.OrderDTO;
 import model.OrderDetailDTO;
 import util.IdsGenerator;
 import view.tdm.OrderDetailTM;
@@ -189,8 +190,8 @@ public class PlaceOrderFormController {
         return customerDAOContract.isExists(id);
     }
 
-    public String generateNewOrderId() {
-        return IdsGenerator.generateId("D",placeOrderDAOContract.getLastOrderId());
+    public String generateNewOrderId() throws SQLException, ClassNotFoundException {
+        return IdsGenerator.generateId("D",placeOrderDAOContract.getLastId());
     }
 
     private void loadAllCustomerIds() {
@@ -293,9 +294,9 @@ public class PlaceOrderFormController {
     public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
         /*Transaction*/
         /*if order id already exist*/
-        if (placeOrderDAOContract.isExistsOrder(orderId)) {
+        if (placeOrderDAOContract.isExists(orderId)) {
         }
-        placeOrderDAOContract.insertOrder(orderId,String.valueOf(orderDate),customerId);
+        placeOrderDAOContract.insert(new OrderDTO(orderId,orderDate,customerId));
 
         for (OrderDetailDTO detail : orderDetails) {
             orderDetailDAOImplContract.insertOrderDetail(new OrderDetailDTO(orderId,detail.getItemCode(),detail.getQty(),

@@ -1,12 +1,43 @@
 package dao;
 
+import model.OrderDTO;
 import util.CrudUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class PlaceOrderDAOImpl implements PlaceOrderDAO {
-    public String getLastOrderId(){
+
+    @Override
+    public ArrayList<OrderDTO> getAll() throws SQLException, ClassNotFoundException {
+        return null;
+    }
+
+    @Override
+    public void insert(OrderDTO orderDTO) throws SQLException, ClassNotFoundException {
+        try {
+            if(CrudUtil.execute("INSERT INTO `Orders` (id, date, customerId) VALUES (?,?,?)",
+                    orderDTO.getOrderId(),orderDTO.getOrderDate(),orderDTO.getCustomerId())){
+            }else{
+            }
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(OrderDTO orderDTO) throws SQLException, ClassNotFoundException {
+
+    }
+
+    @Override
+    public void delete(String s) throws SQLException, ClassNotFoundException {
+
+    }
+
+    @Override
+    public String getLastId() throws SQLException, ClassNotFoundException {
         String lastId = null;
         try {
             ResultSet resultSet = CrudUtil.execute("SELECT id FROM `Orders` ORDER BY id DESC LIMIT 1;");
@@ -19,10 +50,11 @@ public class PlaceOrderDAOImpl implements PlaceOrderDAO {
         return lastId;
     }
 
-    public boolean isExistsOrder(String id){
+    @Override
+    public boolean isExists(String s) throws SQLException, ClassNotFoundException {
         boolean isExists = false;
         try {
-            ResultSet resultSet = CrudUtil.execute("SELECT id FROM `Orders` WHERE id=?",id);
+            ResultSet resultSet = CrudUtil.execute("SELECT id FROM `Orders` WHERE id=?",s);
             if(resultSet.next()){
                 isExists = true;
             }
@@ -32,13 +64,13 @@ public class PlaceOrderDAOImpl implements PlaceOrderDAO {
         return isExists;
     }
 
-    public void insertOrder(String orderId,String date,String customerId){
-        try {
-            if(CrudUtil.execute("INSERT INTO `Orders` (id, date, customerId) VALUES (?,?,?)",orderId,date,customerId)){
-            }else{
-            }
-        } catch (SQLException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
-        }
+    @Override
+    public OrderDTO get(String s) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<String> getAllIds() {
+        return null;
     }
 }

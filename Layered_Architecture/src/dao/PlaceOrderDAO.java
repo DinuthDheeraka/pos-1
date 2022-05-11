@@ -1,7 +1,6 @@
 package dao;
 
-public interface PlaceOrderDAO {
-    String getLastOrderId();
-    boolean isExistsOrder(String id);
-    void insertOrder(String orderId,String date,String customerId);
+import model.OrderDTO;
+
+public interface PlaceOrderDAO extends CrudDAO<OrderDTO,String>{
 }
