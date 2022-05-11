@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PurchaseOrderBOImpl {
+public class PurchaseOrderBOImpl implements PurchaseOrderBO{
 
     ItemDAO itemDAOContract = new ItemDAOImpl();
     CustomerDAO customerDAOContract = new CustomerDAOImpl();
