@@ -2,7 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
-import dao.CrudDAO;
+import dao.custom.ItemDAO;
 import dao.ItemDAOImpl;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -44,7 +44,7 @@ public class ManageItemsFormController {
     public JFXTextField txtUnitPrice;
     public JFXButton btnAddNewItem;
 
-    public CrudDAO<ItemDTO,String> itemDAO = new ItemDAOImpl();
+    public ItemDAO itemDAO = new ItemDAOImpl();
 
     public void initialize() throws SQLException, ClassNotFoundException {
         tblItems.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));

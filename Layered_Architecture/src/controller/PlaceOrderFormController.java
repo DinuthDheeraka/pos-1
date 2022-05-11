@@ -4,6 +4,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import dao.*;
+import dao.custom.CustomerDAO;
+import dao.custom.ItemDAO;
+import dao.custom.OrderDetailDAO;
+import dao.custom.PlaceOrderDAO;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
@@ -55,8 +59,8 @@ public class PlaceOrderFormController {
     public Label lblTotal;
     private String orderId;
 
-    CrudDAO<ItemDTO,String> itemDAOContract = new ItemDAOImpl();
-    CrudDAO<CustomerDTO,String> customerDAOContract = new CustomerDAOImpl();
+    ItemDAO itemDAOContract = new ItemDAOImpl();
+    CustomerDAO customerDAOContract = new CustomerDAOImpl();
     PlaceOrderDAO placeOrderDAOContract = new PlaceOrderDAOImpl();
     OrderDetailDAO orderDetailDAOImplContract = new OrderDetailDAOImpl();
 

@@ -1,6 +1,6 @@
 package dao;
 
-import db.DBConnection;
+import dao.custom.CustomerDAO;
 import javafx.scene.control.Alert;
 import model.CustomerDTO;
 import util.CrudUtil;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @since : 0.1.0
  **/
 
-public class CustomerDAOImpl implements CustomerDAO{
+public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public ArrayList<CustomerDTO> getAll() throws SQLException, ClassNotFoundException {
         ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
