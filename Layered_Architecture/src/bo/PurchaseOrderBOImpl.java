@@ -25,7 +25,6 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO{
     CustomerDAO customerDAOContract = new CustomerDAOImpl();
     PlaceOrderDAO placeOrderDAOContract = new PlaceOrderDAOImpl();
     OrderDetailDAO orderDetailDAOImplContract = new OrderDetailDAOImpl();
-    PurchaseOrderBOImpl purchaseOrderBO = new PurchaseOrderBOImpl();
 
     public boolean purchaseOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
 
