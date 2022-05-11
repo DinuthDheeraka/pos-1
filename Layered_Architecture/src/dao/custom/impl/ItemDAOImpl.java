@@ -1,4 +1,4 @@
-package dao;
+package dao.custom.impl;
 
 import dao.custom.ItemDAO;
 import javafx.scene.control.Alert;
