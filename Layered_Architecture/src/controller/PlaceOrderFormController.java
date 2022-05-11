@@ -1,5 +1,6 @@
 package controller;
 
+import bo.PurchaseOrderBOImpl;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
@@ -62,10 +63,7 @@ public class PlaceOrderFormController {
     public Label lblTotal;
     private String orderId;
 
-    ItemDAO itemDAOContract = new ItemDAOImpl();
-    CustomerDAO customerDAOContract = new CustomerDAOImpl();
-    PlaceOrderDAO placeOrderDAOContract = new PlaceOrderDAOImpl();
-    OrderDetailDAO orderDetailDAOImplContract = new OrderDetailDAOImpl();
+    PurchaseOrderBOImpl purchaseOrderBO = new PurchaseOrderBOImpl();
 
     public void initialize() throws SQLException, ClassNotFoundException {
 
@@ -118,7 +116,7 @@ public class PlaceOrderFormController {
                             new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + newValue + "").show();
                         }
 
-                        CustomerDTO customerDTO = customerDAOContract.get(newValue+"");
+                        CustomerDTO customerDTO = purchaseOrderBO.getCustomer(newValue+"");
                         txtCustomerName.setText(customerDTO.getName());
                     } catch (SQLException e) {
                         new Alert(Alert.AlertType.ERROR, "Failed to find the customer " + newValue + "" + e).show();
@@ -145,7 +143,7 @@ public class PlaceOrderFormController {
 //                        throw new NotFoundException("There is no such item associated with the id " + code);
                     }
 
-                    ItemDTO item = itemDAOContract.get(newItemCode+"");
+                    ItemDTO item = purchaseOrderBO.findItem(newItemCode+"");
 
                     txtDescription.setText(item.getDescription());
                     txtUnitPrice.setText(item.getUnitPrice().setScale(2).toString());
@@ -190,25 +188,25 @@ public class PlaceOrderFormController {
     }
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
-        return itemDAOContract.isExists(code);
+        return purchaseOrderBO.isExistsItem(code);
     }
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        return customerDAOContract.isExists(id);
+        return purchaseOrderBO.existCustomer(id);
     }
 
     public String generateNewOrderId() throws SQLException, ClassNotFoundException {
-        return IdsGenerator.generateId("D",placeOrderDAOContract.getLastId());
+        return IdsGenerator.generateId("D",purchaseOrderBO.getLastOrderId());
     }
 
     private void loadAllCustomerIds() {
-        for (String s: customerDAOContract.getAllIds()) {
+        for (String s: purchaseOrderBO.getAllCustomerIds()) {
             cmbCustomerId.getItems().add(s);
         }
     }
 
     private void loadAllItemCodes() {
-        for (String s: itemDAOContract.getAllIds()) {
+        for (String s: purchaseOrderBO.getAllItemsIds()) {
             cmbItemCode.getItems().add(s);
         }
     }
@@ -298,27 +296,16 @@ public class PlaceOrderFormController {
         calculateTotal();
     }
 
-    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
-        /*Transaction*/
-        /*if order id already exist*/
-        if (placeOrderDAOContract.isExists(orderId)) {
+    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) {
+        try {
+            return purchaseOrderBO.purchaseOrder(orderId,orderDate,customerId,orderDetails);
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+            return false;
         }
-        placeOrderDAOContract.insert(new OrderDTO(orderId,orderDate,customerId));
-
-        for (OrderDetailDTO detail : orderDetails) {
-            orderDetailDAOImplContract.insertOrderDetail(new OrderDetailDTO(orderId,detail.getItemCode(),detail.getQty(),
-                    detail.getUnitPrice()));
-
-            //Search & Update Item
-            ItemDTO item = findItem(detail.getItemCode());
-            item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
-
-            itemDAOContract.update(new ItemDTO(item.getCode(),item.getDescription(),item.getUnitPrice(),item.getQtyOnHand()));
-        }
-        return true;
     }
 
     public ItemDTO findItem(String code) {
-        return itemDAOContract.get(code);
+        return purchaseOrderBO.findItem(code);
     }
 }
