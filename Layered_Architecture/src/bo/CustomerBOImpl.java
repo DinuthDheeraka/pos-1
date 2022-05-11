@@ -7,7 +7,7 @@ import model.CustomerDTO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CustomerBOImpl{
+public class CustomerBOImpl implements CustomerBO{
     public CustomerDAO customerDAO = new CustomerDAOImpl();
 
     public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
