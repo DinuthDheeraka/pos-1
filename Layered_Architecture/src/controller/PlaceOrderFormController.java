@@ -4,7 +4,6 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import dao.*;
-import db.DBConnection;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
@@ -28,7 +27,6 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,8 +56,8 @@ public class PlaceOrderFormController {
 
     CrudDAO<ItemDTO,String> itemDAOContract = new ItemDAOImpl();
     CrudDAO<CustomerDTO,String> customerDAOContract = new CustomerDAOImpl();
-    PlaceOrderDAOContract placeOrderDAOContract = new PlaceOrderDAOImpl();
-    OrderDetailDAOImplContract orderDetailDAOImplContract = new OrderDetailDAOImpl();
+    PlaceOrderDAO placeOrderDAOContract = new PlaceOrderDAOImpl();
+    OrderDetailDAO orderDetailDAOImplContract = new OrderDetailDAOImpl();
 
     public void initialize() throws SQLException, ClassNotFoundException {
 

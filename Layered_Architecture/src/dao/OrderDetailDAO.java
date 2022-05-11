@@ -4,6 +4,6 @@ import model.OrderDetailDTO;
 
 import java.math.BigDecimal;
 
-public interface OrderDetailDAOImplContract {
+public interface OrderDetailDAO {
     void insertOrderDetail(OrderDetailDTO dto);
 }

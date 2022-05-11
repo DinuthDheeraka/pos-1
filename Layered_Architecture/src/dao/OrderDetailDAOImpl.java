@@ -3,10 +3,9 @@ package dao;
 import model.OrderDetailDTO;
 import util.CrudUtil;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 
-public class OrderDetailDAOImpl implements OrderDetailDAOImplContract{
+public class OrderDetailDAOImpl implements OrderDetailDAO {
     public void insertOrderDetail(OrderDetailDTO dto){
         try {
             if(CrudUtil.execute("INSERT INTO orderdetail (orderId, itemCode, qty, unitPrice) VALUES (?,?,?,?)",

@@ -5,7 +5,7 @@ import util.CrudUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PlaceOrderDAOImpl implements PlaceOrderDAOContract{
+public class PlaceOrderDAOImpl implements PlaceOrderDAO {
     public String getLastOrderId(){
         String lastId = null;
         try {
