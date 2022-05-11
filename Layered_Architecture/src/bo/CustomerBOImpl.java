@@ -1,4 +1,36 @@
 package bo;
 
-public class CustomerBOImpl {
+import dao.custom.CustomerDAO;
+import dao.custom.impl.CustomerDAOImpl;
+import model.CustomerDTO;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+public class CustomerBOImpl{
+    public CustomerDAO customerDAO = new CustomerDAOImpl();
+
+    public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
+        return customerDAO.getAll();
+    }
+
+    public void insertCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
+        customerDAO.insert(customerDTO);
+    }
+
+    public void updateCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
+        customerDAO.update(customerDTO);
+    }
+
+    public boolean isExistsCustomer(String id) throws SQLException, ClassNotFoundException {
+        return customerDAO.isExists(id);
+    }
+
+    public void deleteCustomer(String id) throws SQLException, ClassNotFoundException {
+        customerDAO.delete(id);
+    }
+
+    public String getCustomerLastId() throws SQLException, ClassNotFoundException {
+        return customerDAO.getLastId();
+    }
 }
