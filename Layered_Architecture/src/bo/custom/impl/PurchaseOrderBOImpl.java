@@ -1,5 +1,6 @@
-package bo;
+package bo.custom.impl;
 
+import bo.custom.PurchaseOrderBO;
 import dao.custom.CustomerDAO;
 import dao.custom.ItemDAO;
 import dao.custom.OrderDetailDAO;
@@ -12,14 +13,13 @@ import model.CustomerDTO;
 import model.ItemDTO;
 import model.OrderDTO;
 import model.OrderDetailDTO;
-import util.IdsGenerator;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PurchaseOrderBOImpl implements PurchaseOrderBO{
+public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
     ItemDAO itemDAOContract = new ItemDAOImpl();
     CustomerDAO customerDAOContract = new CustomerDAOImpl();
@@ -27,7 +27,6 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO{
     OrderDetailDAO orderDetailDAOImplContract = new OrderDetailDAOImpl();
 
     public boolean purchaseOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
-
         /*Transaction*/
         /*if order id already exist*/
         if (placeOrderDAOContract.isExists(orderId)) {
