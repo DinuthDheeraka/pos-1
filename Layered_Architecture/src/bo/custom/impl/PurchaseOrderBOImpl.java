@@ -1,6 +1,7 @@
 package bo.custom.impl;
 
 import bo.custom.PurchaseOrderBO;
+import dao.DAOFactory;
 import dao.custom.CustomerDAO;
 import dao.custom.ItemDAO;
 import dao.custom.OrderDetailDAO;
@@ -21,10 +22,10 @@ import java.util.List;
 
 public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
-    ItemDAO itemDAOContract = new ItemDAOImpl();
-    CustomerDAO customerDAOContract = new CustomerDAOImpl();
-    PlaceOrderDAO placeOrderDAOContract = new PlaceOrderDAOImpl();
-    OrderDetailDAO orderDetailDAOImplContract = new OrderDetailDAOImpl();
+    ItemDAO itemDAOContract = (ItemDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ITEM);
+    CustomerDAO customerDAOContract = (CustomerDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.CUSTOMER);
+    PlaceOrderDAO placeOrderDAOContract = (PlaceOrderDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ORDER);
+    OrderDetailDAO orderDetailDAOImplContract = (OrderDetailDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ORDERDETAILS);
 
     public boolean purchaseOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
         /*Transaction*/
