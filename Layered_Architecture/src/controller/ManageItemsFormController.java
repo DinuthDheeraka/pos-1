@@ -6,6 +6,7 @@ import bo.custom.ItemBO;
 import bo.custom.impl.ItemBOImpl;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import entity.Item;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -80,10 +81,10 @@ public class ManageItemsFormController {
 
     private void loadAllItems() throws SQLException, ClassNotFoundException {
         tblItems.getItems().clear();
-        ArrayList<ItemDTO> arrayList = itemBO.getAllItems();
+        ArrayList<Item> arrayList = itemBO.getAllItems();
         ObservableList<ItemTM> ob = FXCollections.observableArrayList();
-        for(ItemDTO dto : arrayList){
-            ob.add(new ItemTM(dto.getCode(),dto.getDescription(),dto.getUnitPrice(),dto.getQtyOnHand()));
+        for(Item dto : arrayList){
+            ob.add(new ItemTM(dto.getCode(),dto.getDescription(),dto.getUnitPrice(),dto.getQoh()));
         }
         tblItems.setItems(ob);
 

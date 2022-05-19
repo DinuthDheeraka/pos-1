@@ -6,11 +6,8 @@ import dao.custom.CustomerDAO;
 import dao.custom.ItemDAO;
 import dao.custom.OrderDetailDAO;
 import dao.custom.PlaceOrderDAO;
-import dao.custom.impl.CustomerDAOImpl;
-import dao.custom.impl.ItemDAOImpl;
-import dao.custom.impl.OrderDetailDAOImpl;
-import dao.custom.impl.PlaceOrderDAOImpl;
 import entity.Customer;
+import entity.Item;
 import model.CustomerDTO;
 import model.ItemDTO;
 import model.OrderDTO;
@@ -43,13 +40,15 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
             ItemDTO item = findItem(detail.getItemCode());
             item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
 
-            itemDAOContract.update(new ItemDTO(item.getCode(),item.getDescription(),item.getUnitPrice(),item.getQtyOnHand()));
+            itemDAOContract.update(new Item(item.getCode(),item.getDescription(),item.getUnitPrice(),item.getQtyOnHand()));
         }
         return true;
     }
 
     public ItemDTO findItem(String itemCode) {
-        return itemDAOContract.get(itemCode);
+        Item item = itemDAOContract.get(itemCode);
+        return new ItemDTO(item.getCode(),item.getDescription(),
+                item.getUnitPrice(),item.getQoh());
     }
 
     public CustomerDTO getCustomer(String id){

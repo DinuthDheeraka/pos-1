@@ -1,5 +1,6 @@
 package bo.custom;
 
+import entity.Item;
 import model.CustomerDTO;
 import model.ItemDTO;
 import model.OrderDTO;
