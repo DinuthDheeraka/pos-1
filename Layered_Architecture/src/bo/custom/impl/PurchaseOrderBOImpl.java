@@ -10,6 +10,7 @@ import dao.custom.impl.CustomerDAOImpl;
 import dao.custom.impl.ItemDAOImpl;
 import dao.custom.impl.OrderDetailDAOImpl;
 import dao.custom.impl.PlaceOrderDAOImpl;
+import entity.Customer;
 import model.CustomerDTO;
 import model.ItemDTO;
 import model.OrderDTO;
@@ -52,7 +53,8 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
     }
 
     public CustomerDTO getCustomer(String id){
-        return customerDAOContract.get(id);
+        Customer customer = customerDAOContract.get(id);
+        return new CustomerDTO(customer.getId(),customer.getName(),customer.getAddress());
     }
 
     public boolean isExistsItem(String itemCode) throws SQLException, ClassNotFoundException {

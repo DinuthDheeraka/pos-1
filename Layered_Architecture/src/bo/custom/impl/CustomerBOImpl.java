@@ -3,27 +3,28 @@ package bo.custom.impl;
 import bo.custom.CustomerBO;
 import dao.DAOFactory;
 import dao.custom.CustomerDAO;
-import dao.custom.ItemDAO;
-import dao.custom.impl.CustomerDAOImpl;
+import entity.Customer;
 import model.CustomerDTO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CustomerBOImpl implements CustomerBO {
-    
+
     public CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.CUSTOMER);
 
-    public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
+    public ArrayList<Customer> getAllCustomers() throws SQLException, ClassNotFoundException {
         return customerDAO.getAll();
     }
 
     public void insertCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
-        customerDAO.insert(customerDTO);
+        customerDAO.insert(new Customer(customerDTO.getId(),customerDTO.getName(),
+                customerDTO.getAddress()));
     }
 
     public void updateCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
-        customerDAO.update(customerDTO);
+        customerDAO.update(new Customer(customerDTO.getId(), customerDTO.getName(),
+                customerDTO.getAddress()));
     }
 
     public boolean isExistsCustomer(String id) throws SQLException, ClassNotFoundException {
