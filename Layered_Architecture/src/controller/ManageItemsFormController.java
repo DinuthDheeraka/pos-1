@@ -81,10 +81,10 @@ public class ManageItemsFormController {
 
     private void loadAllItems() throws SQLException, ClassNotFoundException {
         tblItems.getItems().clear();
-        ArrayList<Item> arrayList = itemBO.getAllItems();
+        ArrayList<ItemDTO> arrayList = itemBO.getAllItems();
         ObservableList<ItemTM> ob = FXCollections.observableArrayList();
-        for(Item dto : arrayList){
-            ob.add(new ItemTM(dto.getCode(),dto.getDescription(),dto.getUnitPrice(),dto.getQoh()));
+        for(ItemDTO dto : arrayList){
+            ob.add(new ItemTM(dto.getCode(),dto.getDescription(),dto.getUnitPrice(),dto.getQtyOnHand()));
         }
         tblItems.setItems(ob);
 

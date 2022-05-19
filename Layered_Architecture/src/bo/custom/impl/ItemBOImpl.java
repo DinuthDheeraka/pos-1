@@ -13,8 +13,16 @@ public class ItemBOImpl implements ItemBO {
 
     ItemDAO itemDAO = (ItemDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ITEM);
 
-    public ArrayList<Item> getAllItems() throws SQLException, ClassNotFoundException {
-        return itemDAO.getAll();
+    public ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException {
+        ArrayList<Item> items = itemDAO.getAll();
+        ArrayList<ItemDTO> dtos = new ArrayList<>();
+        for(Item item : items){
+            dtos.add(new ItemDTO(
+                    item.getCode(),item.getDescription(),
+                    item.getUnitPrice(),item.getQoh()
+            ));
+        }
+        return dtos;
     }
 
     public void deleteItem(String code) throws SQLException, ClassNotFoundException {
